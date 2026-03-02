@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F6F4EF">
+<title>Talagunda</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#F6F4EF;--card:#fff;--card2:#FDFCF9;
+--ink:#1a1814;--ink2:#4a463e;--ink3:#8a857c;--ink4:#bbb5aa;
+--acc:#7A5C1F;--acc2:#9B7B30;--accL:#F3EDD8;--accBd:#D4C9A4;
+--blue:#3B6EA0;--pink:#A03B6E;--blueL:#E8F0F8;--pinkL:#F8E8F0;
+--bd:#E4E0D8;--bd2:#D0CCC2;
+--r:10px;
+--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+}
+html,body{height:100%;margin:0}
+body{background:#F6F4EF;color:#1a1814;font-family:'DM Sans','Segoe UI',system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;margin:0;min-height:100vh}
+
+/* ═══ NAV PANEL ═══ */
+#shade{position:fixed;top:0;left:0;right:0;bottom:0;z-index:790;background:rgba(0,0,0,.18);display:none}
+#shade.on{display:block}
+#nav{position:fixed;top:0;left:0;bottom:0;width:270px;z-index:800;background:#ffffff;
+  border-right:1px solid #E4E0D8;transform:translateX(-100%);transition:transform .22s ease;
+  display:flex;flex-direction:column;box-shadow:4px 0 20px rgba(0,0,0,.06);
+  padding-top:var(--st);padding-bottom:var(--sb)}
+#nav.on{transform:translateX(0)}
+.nh{padding:16px 18px 12px;border-bottom:1px solid var(--bd)}
+.nh h1{font-family:'Crimson Pro','Georgia',serif;font-size:1.2rem;font-weight:700;color:var(--acc)}
+.nh p{font-size:.62rem;color:var(--ink3);margin-top:2px}
+.nb{flex:1;overflow-y:auto;padding:6px 0}
+.ni{display:flex;align-items:center;gap:10px;padding:10px 18px;font-size:.8rem;font-weight:500;
+  color:var(--ink2);cursor:pointer;transition:all .1s}
+.ni:active,.ni.on{background:var(--accL);color:var(--acc);font-weight:600}
+.ni svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0}
+.nsec{font-size:.52rem;color:var(--ink4);text-transform:uppercase;letter-spacing:.14em;font-weight:700;
+  padding:14px 18px 4px}
+/* Gen filter chips */
+.gchips{display:flex;flex-wrap:wrap;gap:4px;padding:4px 18px 8px}
+.gc{font-size:.6rem;padding:3px 10px;border-radius:12px;border:1px solid var(--bd);
+  background:var(--card);color:var(--ink3);cursor:pointer;font-weight:600;transition:all .1s}
+.gc.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.gc:active{border-color:var(--acc)}
+.nf{padding:10px 18px;border-top:1px solid var(--bd);font-size:.58rem;color:var(--ink4)}
+.nf b{color:var(--acc)}
+
+/* ═══ TOP BAR ═══ */
+#top{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid #E4E0D8;
+  padding:8px 10px 6px}
+.trow{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+#ham{width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  border-radius:8px;border:1px solid var(--bd);cursor:pointer;flex-shrink:0;background:var(--card)}
+#ham svg{width:17px;height:17px;stroke:var(--ink2);fill:none;stroke-width:2}
+.tlogo{font-family:'Crimson Pro','Georgia',serif;font-size:.85rem;font-weight:700;color:var(--acc);flex:1}
+#cnt{font-size:.58rem;color:var(--ink3)}
+.abtn{background:var(--acc);color:#fff;border:0;padding:5px 12px;border-radius:8px;
+  font-size:.65rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif}
+.abtn:active{background:var(--acc2)}
+#si{width:100%;background:var(--bg);border:1.5px solid var(--bd);color:var(--ink);
+  padding:9px 10px 9px 34px;border-radius:9px;font-size:.84rem;outline:0;transition:border .15s;
+  font-family:'DM Sans',sans-serif;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' fill='none' stroke='%238a857c' stroke-width='2'%3E%3Ccircle cx='6' cy='6' r='4'/%3E%3Cline x1='9' y1='9' x2='13' y2='13'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:10px center}
+#si:focus{border-color:var(--acc)}
+#si::placeholder{color:var(--ink4)}
+
+/* ═══ TREE ═══ */
+#tree{padding:8px 6px 16px;min-height:200px}
+
+
+/* Person card in tree */
+.pc{margin:0 0 2px;padding:0 0 0 24px;position:relative}
+.pc::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:1px;background:var(--bd2)}
+.pc:last-child::before{height:21px}
+.pc::after{content:'';position:absolute;left:10px;top:20px;width:13px;height:1px;background:var(--bd2)}
+.pc.rt{padding-left:0;margin-bottom:8px}.pc.rt::before,.pc.rt::after{display:none}
+
+.pcard{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;cursor:pointer;
+  transition:background .08s;min-height:36px}
+.pcard:active{background:var(--bd)}
+.pcard.hl{background:var(--accL);border-radius:8px}
+
+.pchev{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:.4rem;color:var(--ink4);transition:transform .2s}
+.pchev.o{transform:rotate(90deg);color:var(--acc)}
+.pchev.h{visibility:hidden}
+
+.pdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.pdot.m{background:var(--blue)}.pdot.f{background:var(--pink)}
+
+.pnm{font-family:'Crimson Pro','Georgia',serif;font-size:.84rem;font-weight:600;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;flex:1}
+.psp{font-size:.56rem;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  max-width:90px;flex-shrink:1}
+.psp::before{content:'\2665 ';color:var(--pink);opacity:.4;font-size:.46rem}
+.pbadge{font-size:.46rem;color:var(--acc);background:var(--accL);padding:1px 5px;border-radius:5px;
+  font-weight:700;flex-shrink:0}
+
+.pc.rt>.pcard{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:9px 12px;
+  box-shadow:0 1px 3px rgba(0,0,0,.03)}
+.pc.rt>.pcard .pnm{font-size:.9rem;color:var(--acc)}
+
+.kids{overflow:hidden;transition:max-height .22s ease}.kids.shut{max-height:0!important}
+.uc-label{font-size:.5rem;color:var(--ink4);text-transform:uppercase;letter-spacing:.14em;font-weight:700;
+  padding:14px 6px 4px;border-top:1px solid var(--bd);margin-top:8px}
+
+/* ═══ FOCUS VIEW ═══ */
+#fv{position:fixed;top:0;left:0;right:0;bottom:0;z-index:500;display:none;flex-direction:column;background:#F6F4EF;
+  overflow-y:auto;-webkit-overflow-scrolling:touch}
+#fv.open{display:flex}
+#fvb{position:sticky;top:0;background:#fff;z-index:10;background:var(--card);border-bottom:1px solid var(--bd);
+  padding:calc(6px + var(--st)) 10px 6px;display:flex;align-items:center;gap:6px}
+#fvb button{display:flex;align-items:center;gap:3px;padding:7px 12px 7px 6px;border-radius:8px;
+  background:var(--bg);border:1px solid var(--bd);color:var(--ink);font-size:.74rem;font-weight:600;
+  cursor:pointer;font-family:'DM Sans',sans-serif}
+#fvb button:active{background:var(--bd)}
+#fvb button svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5}
+#fvb span{flex:1;font-family:'Crimson Pro','Georgia',serif;font-size:.8rem;font-weight:700;color:var(--acc);
+  text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#fvc{padding:8px 12px calc(16px + var(--sb));max-width:440px;margin:0 auto;width:100%}
+.fs{font-size:.52rem;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);
+  margin:14px 0 5px;text-align:center;font-weight:700}
+.fhero{text-align:center;padding:18px 14px;margin:4px auto 6px;background:var(--card);
+  border:1.5px solid var(--accBd);border-radius:12px;box-shadow:0 1px 8px rgba(0,0,0,.04)}
+.fhero .pnm{font-size:1.2rem;display:block;margin-bottom:3px;color:var(--acc)}
+.fhero .sub{font-size:.7rem;color:var(--ink3);display:flex;align-items:center;gap:5px;justify-content:center}
+.fcard{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:8px;
+  border:1px solid var(--bd);margin-bottom:4px;cursor:pointer;background:var(--card);transition:all .1s}
+.fcard:active{border-color:var(--acc);transform:translateX(2px)}
+.fcard .pnm{font-size:.82rem}.fcard .rl{font-size:.46rem;color:var(--acc);font-weight:700;
+  letter-spacing:.05em;text-transform:uppercase}
+.fcard.gm{border-left:3px solid var(--blue)}.fcard.gf{border-left:3px solid var(--pink)}
+.fsg{margin:6px 0;padding:8px;border-radius:8px;border:1px solid var(--bd);background:var(--card2)}
+.fsg-h{display:flex;align-items:center;gap:5px;margin-bottom:4px;padding-bottom:4px;border-bottom:1px solid var(--bd)}
+.fsg-l{font-size:.46rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:3px}
+.fbtns{display:flex;gap:5px;margin-top:14px;justify-content:center}
+.fbtn{padding:8px 16px;border-radius:8px;border:1px solid var(--bd);background:var(--card);
+  color:var(--ink2);font-size:.72rem;font-weight:600;cursor:pointer}
+.fbtn:active{border-color:var(--acc);color:var(--acc)}
+.fbtn.ac{background:var(--acc);color:#fff;border-color:var(--acc)}
+/* Ancestry */
+.anc{margin-bottom:10px}
+.anc-l{font-size:.46rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink4);
+  text-align:center;margin-bottom:4px;font-weight:700}
+.anc-ch{display:flex;flex-direction:column;align-items:center;position:relative}
+.anc-ch::before{content:'';position:absolute;top:0;bottom:0;left:50%;width:1px;background:var(--bd)}
+.anc-n{position:relative;z-index:1;display:flex;align-items:center;gap:4px;padding:2px 9px;
+  border-radius:8px;border:1px solid var(--bd);background:var(--card);cursor:pointer;max-width:82%}
+.anc-n:active{border-color:var(--acc)}
+.anc-n .pnm{font-size:.6rem;color:var(--ink3)}.anc-n .fg{font-size:.42rem;color:var(--ink4)}
+.anc-n.cur{border-color:var(--accBd);background:var(--accL)}.anc-n.cur .pnm{color:var(--acc)}
+.anc-ar{position:relative;z-index:1;color:var(--ink4);font-size:.44rem;height:8px;
+  display:flex;align-items:center;justify-content:center}
+
+/* ═══ WIZARD ═══ */
+#wiz{position:fixed;top:0;left:0;right:0;bottom:0;z-index:600;display:none;background:#F6F4EF;flex-direction:column;overflow:auto}
+#wiz.on{display:flex}
+#wizt{background:var(--card);border-bottom:1px solid var(--bd);
+  padding:calc(6px + var(--st)) 10px 6px;display:flex;align-items:center;gap:6px}
+#wizt h2{font-family:'Crimson Pro','Georgia',serif;font-size:.85rem;font-weight:700;flex:1;color:var(--acc)}
+#wizb{padding:8px 6px calc(8px + var(--sb));overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
+@media(min-width:600px){#wizb{max-width:580px;margin:0 auto;width:100%}}
+
+.wn{padding-left:22px;position:relative;margin-top:2px}
+.wn::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:1px;background:var(--bd2)}
+.wn:last-child::before{height:22px}
+.wn::after{content:'';position:absolute;left:8px;top:22px;width:12px;height:1px;background:var(--bd2)}
+.wn.wr{padding-left:0}.wn.wr::before,.wn.wr::after{display:none}
+
+.wctx{font-size:.5rem;color:var(--ink3);padding:1px 3px;font-weight:600}.wctx b{color:var(--acc)}
+.wp{display:flex;flex-wrap:wrap;gap:4px;align-items:center;padding:6px 8px;border-radius:7px;
+  background:var(--card);border:1px solid var(--bd);margin:1px 0}
+.wp.wmain{border-left:3px solid var(--acc)}
+.wp.wsp{border-left:3px solid var(--pink)}
+.wp input{background:var(--bg);border:1.5px solid var(--bd);color:var(--ink);padding:6px 8px;
+  border-radius:6px;font-size:.78rem;outline:0;flex:1;min-width:80px;font-family:'DM Sans',sans-serif}
+.wp input:focus{border-color:var(--acc)}
+.wp input.wnm{font-family:'Crimson Pro','Georgia',serif;font-weight:600;font-size:.82rem;min-width:110px}
+.wp select{background:var(--bg);border:1.5px solid var(--bd);color:var(--ink);padding:6px 4px;
+  border-radius:6px;font-size:.7rem}
+.wp .wx{background:none;border:none;color:#b44;font-size:.78rem;cursor:pointer;padding:1px 5px;font-weight:700}
+
+.wadd{display:inline-flex;align-items:center;gap:3px;font-size:.62rem;color:var(--acc);cursor:pointer;
+  padding:4px 10px;margin:2px 0 2px 22px;border-radius:7px;border:1.5px dashed var(--accBd);
+  background:var(--accL);font-weight:700;transition:all .1s}
+.wadd:active{background:rgba(139,105,20,.15)}
+.wadd-sib{display:flex;align-items:center;justify-content:center;font-size:.78rem;color:var(--acc);
+  cursor:pointer;padding:14px;margin:8px 0;border-radius:10px;border:2px dashed var(--accBd);
+  background:var(--accL);font-weight:700;transition:all .1s}
+.wadd-sib:active{background:rgba(139,105,20,.15);border-color:var(--acc)}
+
+/* Edit/Export */
+.ov{position:fixed;top:0;left:0;right:0;bottom:0;z-index:700;background:rgba(0,0,0,.12);display:none;position:fixed;top:0;left:0;right:0;bottom:0;
+  align-items:flex-end;justify-content:center;backdrop-filter:blur(3px)}
+.ov.on{display:flex}
+.mo{background:var(--card);border:1px solid var(--bd);border-radius:12px 12px 0 0;
+  padding:16px 14px calc(14px + var(--sb));width:100%;max-width:400px;max-height:84vh;
+  overflow-y:auto;box-shadow:0 -4px 16px rgba(0,0,0,.06)}
+.mo h2{font-family:'Crimson Pro','Georgia',serif;font-size:1rem;font-weight:700;color:var(--acc);margin-bottom:6px}
+.rw{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px}.rw.f{grid-template-columns:1fr}
+.fl{display:flex;flex-direction:column;gap:2px}
+.fl label{font-size:.5rem;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);font-weight:700}
+.fl input,.fl select,.fl textarea{background:var(--bg);border:1.5px solid var(--bd);color:var(--ink);
+  padding:8px;border-radius:6px;font-size:.82rem;outline:0;font-family:'DM Sans',sans-serif}
+.fl input:focus,.fl select:focus{border-color:var(--acc)}
+.ma{display:flex;gap:5px;margin-top:12px;justify-content:flex-end}
+.bok{background:var(--acc);border:0;color:#fff;padding:8px 18px;border-radius:8px;font-size:.78rem;
+  font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif}
+.bca{background:var(--card);border:1px solid var(--bd);color:var(--ink2);padding:8px 14px;
+  border-radius:8px;font-size:.78rem;cursor:pointer;font-family:'DM Sans',sans-serif}
+#etxt{width:100%;height:140px;border:1.5px solid var(--bd);border-radius:6px;padding:6px;
+  font-family:monospace;font-size:.48rem;background:var(--bg);color:var(--ink);outline:0}
+.tst{position:fixed;bottom:calc(16px + var(--sb));left:50%;transform:translateX(-50%);
+  background:var(--card);border:1px solid var(--bd);color:var(--ink);padding:7px 18px;border-radius:10px;
+  font-size:.74rem;font-weight:600;z-index:9999;box-shadow:0 3px 12px rgba(0,0,0,.08);
+  animation:tu .15s ease,to .2s ease 1.6s forwards}
+.tst.ok{border-color:rgba(50,130,50,.15);color:#2a7a2a}
+.tst.w{border-color:rgba(180,140,50,.15);color:var(--acc)}
+@keyframes tu{from{opacity:0;transform:translate(-50%,5px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes to{to{opacity:0}}
+</style>
+</head>
+<body>
+
+<div id="shade" onclick="cNav()"></div>
+<div id="nav">
+  <div class="nh"><h1>Talagunda</h1><p>Family Heritage · Est. 11 Generations</p></div>
+  <div class="nb">
+    <div class="ni on" onclick="cNav()"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> Tree</div>
+    <div class="ni" onclick="cNav();openWiz(null)"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Family</div>
+    <div class="ni" onclick="cNav();expAll()"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg> Expand All</div>
+    <div class="ni" onclick="cNav();colAll()"><svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg> Collapse All</div>
+    <div class="nsec">Filter by Generation</div>
+    <div class="gchips" id="gchips"></div>
+    <div class="nsec">Actions</div>
+    <div class="ni" onclick="cNav();saveD()"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/></svg> Save</div>
+    <div class="ni" onclick="cNav();openExp()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export</div>
+  </div>
+  <div class="nf"><b id="nc">0</b> people · <b id="ng">0</b> generations</div>
+</div>
+
+<div id="top">
+  <div class="trow">
+    <div id="ham" onclick="oNav()"><svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div>
+    <span class="tlogo">Talagunda</span>
+    <span id="cnt"></span>
+    <button class="abtn" onclick="openWiz(null)">+ Add</button>
+  </div>
+  <input id="si" placeholder="Search family…" autocomplete="off">
+</div>
+
+<div id="tree"></div>
+
+<div id="fv">
+  <div id="fvb"><button onclick="goBack()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</button><span id="fvn"></span></div>
+  <div id="fvc"></div>
+</div>
+
+<div id="wiz">
+  <div id="wizt">
+    <button class="bca" onclick="closeWiz()" style="padding:5px 10px;font-size:.68rem">Cancel</button>
+    <h2 id="wiztitle">Add Family</h2>
+    <button class="bok" onclick="wizSave()" id="wsave" style="padding:5px 14px;font-size:.7rem">Save</button>
+  </div>
+  <div id="wizb"></div>
+</div>
+
+<div class="ov" id="editOv"><div class="mo" id="editI"></div></div>
+<div class="ov" id="expo"><div class="mo">
+  <h2>Export</h2><p style="font-size:.64rem;color:var(--ink3);margin-bottom:6px">Copy and paste into GitHub</p>
+  <textarea id="etxt" readonly></textarea>
+  <div class="ma"><button class="bca" onclick="$('expo').classList.remove('on')">Close</button><button class="bok" onclick="cpExp()">Copy</button></div>
+</div></div>
+
+<script>
+
+let people=[
+  {id:'p1', name:'Lakshmanappa', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:0},
+  {id:'p1772400464607', name:'Venkatagiriyappa', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:1},
+  {id:'p1772400475749', name:'Haavalappa', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:1},
+  {id:'p1772400487405', name:'Lingappa', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:2},
+  {id:'p1772400494369', name:'Lakshmanappa', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:2},
+  {id:'p1772400507029', name:'Bhyrappa', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:3},
+  {id:'p1772400515551', name:'Annayyappa', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:3},
+  {id:'p1772400522169', name:'Shivaramayya', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:3},
+  {id:'p1772400537167', name:'Puttalingappa', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:4},
+  {id:'p1772400547477', name:'Siddaramiah', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:4},
+  {id:'p1772400559627', name:'Venkatagiriyappa', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:4},
+  {id:'p1772400572719', name:'Lakshmanappa', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:4},
+  {id:'p1772400594395', name:'Lakhsmidevamma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:4},
+  {id:'p1772400623085', name:'Bhageerathamma uruf Adilakshmamma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:4},
+  {id:'p1772400705953', name:'Bhageerathamma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:5},
+  {id:'p1772400719163', name:'Lingarasayya', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:5},
+  {id:'p1772400739369', name:'Gundappa', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:5},
+  {id:'p1772400773945', name:'Lingappa', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:5},
+  {id:'p1772400781888', name:'Narasamma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:5},
+  {id:'p1772400845141', name:'Mahalakshmamma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:5},
+  {id:'p1772400865091', name:'Venkataramayya', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:6},
+  {id:'p1772400875955', name:'Lakshmi Narasappa', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:6},
+  {id:'p1772400883645', name:'Nanjundappa', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:6},
+  {id:'p1772400892289', name:'Henjarappa', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:6},
+  {id:'p1772400898223', name:'Subbanna', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:6},
+  {id:'p1772400915037', name:'Venkatalakshmamma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:6},
+  {id:'p1772400922409', name:'Rangamma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:6},
+  {id:'p1772400931965', name:'Subbamma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:6},
+  {id:'p1772400952937', name:'Jayamma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:6},
+  {id:'p1772400961497', name:'Sharadamma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:6},
+  {id:'p1772400997391', name:'T V Rajanna', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772401010934', name:'T V Chandrashekaraiah', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772401030091', name:'Seetha Lakshmamma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772401055282', name:'Kamalamma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772401066040', name:'Sumithramma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772401079980', name:'H N Devarajappa', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772401087775', name:'H N Ramakrishnaiah', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772401097535', name:'H N Jagannathappa', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772401104795', name:'H N Narasamma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772401115105', name:'H N Susheelamma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772401135815', name:'T H Rajagopal', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772401165660', name:'Sunanda', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772401194614', name:'Suguna', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772401276106', name:'Shantha', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772401286008', name:'T H Jaiprakash', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772401295281', name:'T H Somasundar', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772401314225', name:'Vijayalakshmi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772401337499', name:'T S Nagaraj', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772401346401', name:'T S Seetharam', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772401359026', name:'T S Sundaramma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772401397549', name:'T R Jalajaakshi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772401408995', name:'T R Shankaranarayana', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772401425343', name:'T R Vijayalakshmi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772401447281', name:'T R Nageshwari', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772401459117', name:'T R Meenakshi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772401487784', name:'S Krishna Murthy', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772401512407', name:'N Subbalakshmi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772401541018', name:'K S Venkatachalaiah', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772401563748', name:'K N Vasantha Kumar', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772401577317', name:'S Ramesh Babu', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772401602444', name:'S K Bhanumathi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772401611163', name:'S K Madhumathi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772401619509', name:'S K Sumathi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772401633562', name:'S K Rameshwari', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772401653197', name:'T S Chidambara', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772401661373', name:'T S Shashi Mohan', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772401685916', name:'K V Kirana', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772401734297', name:'K V Geetha', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772401784004', name:'K V Gayathri', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772401809065', name:'R Jahnavi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772401855902', name:'Sanjeev Kumar Singh', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772401863652', name:'L Ravi', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772401881426', name:'S H Vinayaka', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772401889441', name:'Kamalakara Bhat', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772401899678', name:'R Chaitra', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772401950926', name:'K V Geetha', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772401975084', name:'P Dinesha', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772402011714', name:'T S Shashimohan', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772402023346', name:'M Vinayak', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772402039608', name:'V R Sunil', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772402102254', name:'Sahil Kumar Singh', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772402116088', name:'L R Shreya', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772402124591', name:'L R Shreeja', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772402144823', name:'Vishnu V Bharadwaj', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772402164880', name:'Avani K Bhat', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772402173847', name:'Skanda K Bhat', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772402184904', name:'C Arya Shravan', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772402245288', name:'T S Aishwarya', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772402310122', name:'D Deeksha Kulkarni', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772402321800', name:'D Kanmani Kulkarni', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772402344684', name:'T S Aishwarya', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772402363466', name:'V Amartya', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772402371436', name:'V Aakarsh', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772402383930', name:'V S Vaaridhi', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772402428168', name:'Sudha', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772402435945', name:'Vyjayanthi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772402443458', name:'Manjunath T C', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772402459166', name:'Ananta Krishna Sharma', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772402489286', name:'Girish Chandra', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772402507562', name:'Rathna M N', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772402549669', name:'Kumar B', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772402557294', name:'Manohara B A', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772402567498', name:'Mekhala T G', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772402578190', name:'Indushree T G', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772402590144', name:'Indira M', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772402597236', name:'Sindhu Shree M', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772402626296', name:'Jyothi P', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772402639950', name:'Shruthi K N', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772402658284', name:'Anil Shastri H B', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772402677982', name:'Veeresh Telasang', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772402687715', name:'Manjunath G S', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772402708370', name:'Sreenivas V', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772402725744', name:'Divith Sharma B K', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772402733848', name:'Veeksha B K', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772402742396', name:'Vismaya B K', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772402756466', name:'Manasvini H A', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772402771072', name:'Atharv Telasang', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772402783698', name:'Anvitha Bharadwaj', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772402792490', name:'Athreya', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772402843530', name:'B S Narayana Rao', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772402884830', name:'Lakshmi Narasamma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772402900032', name:'Indiramma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772402919999', name:'H R Venkataramayya', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772402930209', name:'B V Narayana Rao', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772402944266', name:'Padmasundaramma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772402958758', name:'B V Jayalakshmi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772402965650', name:'Uma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772402988034', name:'B Ramashesha Sharma', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772403024384', name:'K S Gopal Rao', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772403035488', name:'Shanta Lakshmamma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772403062540', name:'K N Srinivasa Murthy', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772403078640', name:'A S Shivaram', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772403094990', name:'H Anantharamu', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772403106096', name:'Lakshmi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772403123862', name:'G N Satyapremakumari', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772403136674', name:'S Satyanarayana', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772403148126', name:'Annapoorna', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772403159128', name:'Rukmini', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772403172054', name:'Nagaraja Rao', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:7},
+  {id:'p1772403314036', name:'B N Subbaramayya', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772403326477', name:'Annapoorna', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772403341698', name:'Padma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428104255', name:'H S Naveen Kumar', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772428112988', name:'H S Lakshmi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772428163069', name:'Shashanka', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772428231686', name:'Krishna Swamy', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772428242988', name:'Naga Samarth', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772428247998', name:'Samanth', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772428278308', name:'B N Satyanarayana', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428289224', name:'B N Balasubramanya', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428299930', name:'A N Vallidevi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428313142', name:'A N Subbukrishnaiah', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428342792', name:'Karthik B S', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772428352132', name:'VIdyashree B S', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772428364876', name:'Lakshmi B', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428370706', name:'Abhishek A B', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772428383584', name:'Nagashree A B', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772428416680', name:'H V Rajanna', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428430936', name:'H V Venkatalakshmamma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428437402', name:'Padma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428447097', name:'H V Jayaprakash', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428458532', name:'H V Vijayalakshmi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428491738', name:'H V Ramachandra', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428498336', name:'H V Mohan', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428514364', name:'H V Satyanarayana', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428526842', name:'H V Geetha', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428537748', name:'H V Shobha', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428562782', name:'R Prameela', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428570468', name:'Rama Murthy', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428576908', name:'S Ramesh', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428591027', name:'K S Bhagyalakshmi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428606266', name:'B G Manjunatha Prasad', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428619660', name:'Suma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428626242', name:'Ambika', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428641044', name:'Rajeshwari', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772428674955', name:'R Pushpa', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772428680694', name:'Vamshikrishna', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772428699882', name:'Pradhyumna', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772428833780', name:'Dileep R', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772428852428', name:'Shwetha', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772428870451', name:'J Raghavendra', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772428879791', name:'S Navyashree', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772428891584', name:'Sushmitha J', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772428905333', name:'M S Vidwath Kumar', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772428921713', name:'B M Divyashree', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772428932756', name:'Madhu Kiran B M', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772428943256', name:'Shalini', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772428953696', name:'Pranavi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772428976456', name:'R NIdhishree', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772428982645', name:'R Athresha', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772428993166', name:'M Guruprasad', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429005924', name:'B N Rajaram', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772429012286', name:'B N Venkatesh', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772429053650', name:'K N Vijayalakshmi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772429070500', name:'Pushpa V', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772429077220', name:'Sudarshan B V', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429083641', name:'Sanjay B V', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429092239', name:'Suhas B R', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429106741', name:'Tejaswini B R', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429117884', name:'Gayatri Devi M N', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429124913', name:'Lakshya S', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772429132404', name:'Rakshith K', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429149711', name:'Shravya', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772429200040', name:'(not named)', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772429231327', name:'Navya S P', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429240739', name:'Sunav S Vasista', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772429250135', name:'Nidhvith S Vasista', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772429275299', name:'T D Vasantha Lakshmi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772429283705', name:'T D Venkataramu', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772429293060', name:'T D Suryanarayana', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772429301237', name:'T D Girijamma', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772429310940', name:'T D Satheesh', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772429321298', name:'K V Sreedhara Murthy', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772429331526', name:'Nagarathna', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772429342188', name:'S Geetha', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772429362704', name:'Satya Prasad', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772429374685', name:'H M Poornima', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772429402841', name:'K S Bhagyalakshmi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429417385', name:'K S Manjunath', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429424969', name:'K S Poornima', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429441150', name:'H V Jayaprakash', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429457827', name:'Bramarambha', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429466326', name:'Prabhakar', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429480727', name:'J Raghavendra', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772429491689', name:'Sushmitha J', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772429520623', name:'Navyashree', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772429533569', name:'M S Vidhwath Kumar', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772429569327', name:'Sree Deekshith', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772429577305', name:'Sree Rakshith', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772429591187', name:'Mrudula', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772429609333', name:'Vaibhavi', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772429628141', name:'T V Malini', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429637826', name:'T V Kavyashree', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429647539', name:'T V Shubhashree', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429657267', name:'T V Navyashree', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429666108', name:'T V Rojashree', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429678867', name:'T V Shivadarshan', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429689933', name:'Vishnu Murthy', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429698959', name:'Janardhan', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429710349', name:'Krishna Muthy', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429730523', name:'Raghavendra G L', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429741539', name:'Vinay', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429842347', name:'Lakshmeesha', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772429847505', name:'Shreyas', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772429857223', name:'Maanya', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772429861503', name:'Manoj', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772429872949', name:'Sadhana', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772429885719', name:'Samruddh', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772429900409', name:'T S Sharath', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429905581', name:'T S Bharath', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429923189', name:'Meenakshi Sharath', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772429932131', name:'Smitha N S', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429952155', name:'Megha S', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772429967605', name:'B Ramashesha Sharma', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772430010999', name:'Srikanth S Bharadwaj', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772430017853', name:'Sahana', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772430039191', name:'Kavitha R', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772430051387', name:'Shivakumar Jakali', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772430065031', name:'Tanu Bharadwaj', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772430082099', name:'Dhanvi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772430087667', name:'Daksha', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772430103043', name:'Padmaja', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772430116701', name:'T S Sheshadri', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772430126133', name:'Kumar Aithal', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772430147897', name:'Samskruti Aithal', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772430165945', name:'T R Ramadevi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772430172403', name:'R N Swamy', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772430187031', name:'Gopal T R', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772430199474', name:'T R Lathamani', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772430216413', name:'K G Anantharamu', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772430230743', name:'K R Sowbhagya', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772430240825', name:'Lakshmi K', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772430254001', name:'Ballakki Subbaramu', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772430271709', name:'B A Rashmi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772430281209', name:'B A Vyshali', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772433243124', name:'T N Santhosh', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772433260082', name:'Soundarya T N', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772433277194', name:'Panindra T G', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772433294952', name:'Bhoomika T Gopal', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772433303438', name:'Karthik B S', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772433310052', name:'Sachin B S', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772433321802', name:'D V Vasudevamurthy', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772433327986', name:'Lohith', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772433340030', name:'Anusha A', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772433354938', name:'Nanda Kishore G N', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772433372495', name:'Prasanna R', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772433387608', name:'Prateeksha R', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772433398316', name:'Chaithra S', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772433413666', name:'Vishwas V Kashyap', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772433421772', name:'Ananya', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772433432066', name:'Brunda Rao G N', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772433439894', name:'Shriya Rao G N', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772433450223', name:'Trishika Prasanna', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772433469475', name:'Sreekanta S Ballakki', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772433484060', name:'T G Girish', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772433491660', name:'Kalavathi', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772433500618', name:'Veena Akki', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772433511984', name:'Phalguni', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772433523478', name:'Pruthvi', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772433539020', name:'Bhama Mani K G', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772433550993', name:'Nagendra Babu K G', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772433563764', name:'Ramakrishna K N', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772433573318', name:'Vidya K', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772433584208', name:'Dheeraj K R', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772433596630', name:'Deeksha K R', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772433602074', name:'Rajesh K R', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772433615385', name:'Tanisha N', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772433624032', name:'Kousthub N', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772433765746', name:'R Gayatri', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772434000505', name:'B L Manikumar', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772434025700', name:'Kavitha M', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772434038195', name:'K N Hareesh', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772434053700', name:'Shrushthi  H', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772434098419', name:'T R Ramesh', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772434108903', name:'R Usha', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772434171319', name:'K Shaila', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772434179804', name:'A S Ravi', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772434402763', name:'R Vinay', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772434409273', name:'Revathi D', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772434423916', name:'Drithi V', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772434436913', name:'R Deepak Simha', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772434446988', name:'Shwetha M', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772434465579', name:'Dhanya D', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772434794903', name:'S Venkatesh Prasad', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772434806541', name:'S P Latha', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772434816317', name:'A S Ravi', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772434830987', name:'A S Geetha', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772434844096', name:'B N Prabha', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772434852563', name:'Subramanya', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772434865037', name:'R Usha', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:8},
+  {id:'p1772434885851', name:'Shreyas P', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772434897161', name:'Madhuri R', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772434911609', name:'Samartha Shreyas', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:10},
+  {id:'p1772434930989', name:'Smitha S', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772434940065', name:'A S Ravishankar', gender:'m', birth:null, death:null, occ:'', place:'', notes:'', generation:9},
+  {id:'p1772434946623', name:'R Praneetha', gender:'f', birth:null, death:null, occ:'', place:'', notes:'', generation:10}
+,
+{id:'p1772449755254',name:'Vishalakshamma',gender:'m',birth:null,death:null,occ:'',place:'',notes:'',generation:8},
+  {id:'p1772449913896',name:'H A Sudha',gender:'f',birth:null,death:null,occ:'',place:'',notes:'',generation:8},
+  {id:'p1772449928397',name:'H A INDIRA',gender:'f',birth:null,death:null,occ:'',place:'',notes:'',generation:8},
+  {id:'p1772449982175',name:'S RAVEENDRA',gender:'m',birth:null,death:null,occ:'',place:'',notes:'',generation:8},
+  {id:'p1772450001463',name:'Shwetha R',gender:'f',birth:null,death:null,occ:'',place:'',notes:'',generation:9},
+  {id:'p1772450024836',name:'M S ARUN',gender:'m',birth:null,death:null,occ:'',place:'',notes:'',generation:9},
+  {id:'p1772450047278',name:'AVANI ARUN',gender:'f',birth:null,death:null,occ:'',place:'',notes:'',generation:10},
+  {id:'p1772450064986',name:'AVISHI ARUN',gender:'f',birth:null,death:null,occ:'',place:'',notes:'',generation:10},
+  {id:'p1772450128378',name:'SUHAS R',gender:'m',birth:null,death:null,occ:'',place:'',notes:'',generation:9},
+  {id:'p1772450143800',name:'K N SHIVASHANKAR',gender:'m',birth:null,death:null,occ:'',place:'',notes:'',generation:8},
+  {id:'p1772450158029',name:'S POOJA',gender:'f',birth:null,death:null,occ:'',place:'',notes:'',generation:9},
+  {id:'p1772450173910',name:'Jitendra',gender:'m',birth:null,death:null,occ:'',place:'',notes:'',generation:9},
+  {id:'p1772450207037',name:'Vishal',gender:'m',birth:null,death:null,occ:'',place:'',notes:'',generation:9},
+  {id:'p1772450236669',name:'T J SUMA',gender:'f',birth:null,death:null,occ:'',place:'',notes:'',generation:8},
+  {id:'p1772450251596',name:'T J PHANEENDRA',gender:'m',birth:null,death:null,occ:'',place:'',notes:'',generation:8},
+  {id:'p1772450266834',name:'P JAYASIMHA',gender:'m',birth:null,death:null,occ:'',place:'',notes:'',generation:8},
+  {id:'p1772450282346',name:'B R ASHA',gender:'m',birth:null,death:null,occ:'',place:'',notes:'',generation:8},
+  {id:'p1772450312106',name:'P J VIVEKA SIMHA',gender:'m',birth:null,death:null,occ:'',place:'',notes:'',generation:9},
+  {id:'p1772450330636',name:'TRISHA P',gender:'f',birth:null,death:null,occ:'',place:'',notes:'',generation:9},
+  {id:'p1772450359615',name:'Maitri P',gender:'m',birth:null,death:null,occ:'',place:'',notes:'',generation:9}
+];  // END PEOPLE
+
+let relations=[
+  {type:'parent', parent:'p1', child:'p1772400464607'},
+  {type:'parent', parent:'p1', child:'p1772400475749'},
+  {type:'parent', parent:'p1772400464607', child:'p1772400487405'},
+  {type:'parent', parent:'p1772400464607', child:'p1772400494369'},
+  {type:'parent', parent:'p1772400487405', child:'p1772400507029'},
+  {type:'parent', parent:'p1772400487405', child:'p1772400515551'},
+  {type:'parent', parent:'p1772400487405', child:'p1772400522169'},
+  {type:'parent', parent:'p1772400522169', child:'p1772400537167'},
+  {type:'parent', parent:'p1772400522169', child:'p1772400547477'},
+  {type:'parent', parent:'p1772400522169', child:'p1772400559627'},
+  {type:'parent', parent:'p1772400522169', child:'p1772400572719'},
+  {type:'spouse', a:'p1772400537167', b:'p1772400594395'},
+  {type:'spouse', a:'p1772400547477', b:'p1772400623085'},
+  {type:'parent', parent:'p1772400537167', child:'p1772400705953'},
+  {type:'parent', parent:'p1772400537167', child:'p1772400719163'},
+  {type:'parent', parent:'p1772400537167', child:'p1772400739369'},
+  {type:'parent', parent:'p1772400547477', child:'p1772400773945'},
+  {type:'spouse', a:'p1772400773945', b:'p1772400781888'},
+  {type:'spouse', a:'p1772400719163', b:'p1772400845141'},
+  {type:'parent', parent:'p1772400719163', child:'p1772400865091'},
+  {type:'parent', parent:'p1772400719163', child:'p1772400875955'},
+  {type:'parent', parent:'p1772400719163', child:'p1772400883645'},
+  {type:'parent', parent:'p1772400719163', child:'p1772400892289'},
+  {type:'parent', parent:'p1772400719163', child:'p1772400898223'},
+  {type:'spouse', a:'p1772400865091', b:'p1772400915037'},
+  {type:'spouse', a:'p1772400875955', b:'p1772400922409'},
+  {type:'spouse', a:'p1772400883645', b:'p1772400931965'},
+  {type:'spouse', a:'p1772400892289', b:'p1772400952937'},
+  {type:'spouse', a:'p1772400898223', b:'p1772400961497'},
+  {type:'parent', parent:'p1772400865091', child:'p1772400997391'},
+  {type:'parent', parent:'p1772400865091', child:'p1772401010934'},
+  {type:'parent', parent:'p1772400875955', child:'p1772401030091'},
+  {type:'parent', parent:'p1772400875955', child:'p1772401055282'},
+  {type:'parent', parent:'p1772400875955', child:'p1772401066040'},
+  {type:'parent', parent:'p1772400883645', child:'p1772401079980'},
+  {type:'parent', parent:'p1772400883645', child:'p1772401087775'},
+  {type:'parent', parent:'p1772400883645', child:'p1772401097535'},
+  {type:'parent', parent:'p1772400883645', child:'p1772401104795'},
+  {type:'parent', parent:'p1772400883645', child:'p1772401115105'},
+  {type:'parent', parent:'p1772400892289', child:'p1772401135815'},
+  {type:'parent', parent:'p1772400892289', child:'p1772401165660'},
+  {type:'parent', parent:'p1772400892289', child:'p1772401194614'},
+  {type:'parent', parent:'p1772400892289', child:'p1772401276106'},
+  {type:'parent', parent:'p1772400892289', child:'p1772401286008'},
+  {type:'parent', parent:'p1772400892289', child:'p1772401295281'},
+  {type:'parent', parent:'p1772400892289', child:'p1772401314225'},
+  {type:'parent', parent:'p1772400898223', child:'p1772401337499'},
+  {type:'parent', parent:'p1772400898223', child:'p1772401346401'},
+  {type:'parent', parent:'p1772400898223', child:'p1772401359026'},
+  {type:'parent', parent:'p1772400997391', child:'p1772401397549'},
+  {type:'parent', parent:'p1772400997391', child:'p1772401408995'},
+  {type:'parent', parent:'p1772400997391', child:'p1772401425343'},
+  {type:'parent', parent:'p1772400997391', child:'p1772401447281'},
+  {type:'parent', parent:'p1772400997391', child:'p1772401459117'},
+  {type:'spouse', a:'p1772401397549', b:'p1772401487784'},
+  {type:'spouse', a:'p1772401408995', b:'p1772401512407'},
+  {type:'spouse', a:'p1772401425343', b:'p1772401541018'},
+  {type:'spouse', a:'p1772401447281', b:'p1772401563748'},
+  {type:'spouse', a:'p1772401459117', b:'p1772401577317'},
+  {type:'parent', parent:'p1772401397549', child:'p1772401602444'},
+  {type:'parent', parent:'p1772401397549', child:'p1772401611163'},
+  {type:'parent', parent:'p1772401397549', child:'p1772401619509'},
+  {type:'parent', parent:'p1772401397549', child:'p1772401633562'},
+  {type:'parent', parent:'p1772401408995', child:'p1772401653197'},
+  {type:'parent', parent:'p1772401408995', child:'p1772401661373'},
+  {type:'parent', parent:'p1772401425343', child:'p1772401685916'},
+  {type:'parent', parent:'p1772401447281', child:'p1772401734297'},
+  {type:'parent', parent:'p1772401447281', child:'p1772401784004'},
+  {type:'parent', parent:'p1772401459117', child:'p1772401809065'},
+  {type:'spouse', a:'p1772401602444', b:'p1772401855902'},
+  {type:'spouse', a:'p1772401611163', b:'p1772401863652'},
+  {type:'spouse', a:'p1772401619509', b:'p1772401881426'},
+  {type:'spouse', a:'p1772401633562', b:'p1772401889441'},
+  {type:'spouse', a:'p1772401653197', b:'p1772401899678'},
+  {type:'spouse', a:'p1772401661373', b:'p1772401950926'},
+  {type:'spouse', a:'p1772401685916', b:'p1772401975084'},
+  {type:'spouse', a:'p1772401734297', b:'p1772402011714'},
+  {type:'spouse', a:'p1772401784004', b:'p1772402023346'},
+  {type:'spouse', a:'p1772401809065', b:'p1772402039608'},
+  {type:'parent', parent:'p1772401602444', child:'p1772402102254'},
+  {type:'parent', parent:'p1772401611163', child:'p1772402116088'},
+  {type:'parent', parent:'p1772401611163', child:'p1772402124591'},
+  {type:'parent', parent:'p1772401619509', child:'p1772402144823'},
+  {type:'parent', parent:'p1772401633562', child:'p1772402164880'},
+  {type:'parent', parent:'p1772401633562', child:'p1772402173847'},
+  {type:'parent', parent:'p1772401653197', child:'p1772402184904'},
+  {type:'parent', parent:'p1772401661373', child:'p1772402245288'},
+  {type:'parent', parent:'p1772401685916', child:'p1772402310122'},
+  {type:'parent', parent:'p1772401685916', child:'p1772402321800'},
+  {type:'parent', parent:'p1772401734297', child:'p1772402344684'},
+  {type:'parent', parent:'p1772401784004', child:'p1772402363466'},
+  {type:'parent', parent:'p1772401784004', child:'p1772402371436'},
+  {type:'parent', parent:'p1772401809065', child:'p1772402383930'},
+  {type:'parent', parent:'p1772401010934', child:'p1772402428168'},
+  {type:'parent', parent:'p1772401010934', child:'p1772402435945'},
+  {type:'parent', parent:'p1772401010934', child:'p1772402443458'},
+  {type:'spouse', a:'p1772402428168', b:'p1772402459166'},
+  {type:'spouse', a:'p1772402435945', b:'p1772402489286'},
+  {type:'spouse', a:'p1772402443458', b:'p1772402507562'},
+  {type:'parent', parent:'p1772402428168', child:'p1772402549669'},
+  {type:'parent', parent:'p1772402428168', child:'p1772402557294'},
+  {type:'parent', parent:'p1772402435945', child:'p1772402567498'},
+  {type:'parent', parent:'p1772402435945', child:'p1772402578190'},
+  {type:'parent', parent:'p1772402443458', child:'p1772402590144'},
+  {type:'parent', parent:'p1772402443458', child:'p1772402597236'},
+  {type:'spouse', a:'p1772402549669', b:'p1772402626296'},
+  {type:'spouse', a:'p1772402557294', b:'p1772402639950'},
+  {type:'spouse', a:'p1772402567498', b:'p1772402658284'},
+  {type:'spouse', a:'p1772402578190', b:'p1772402677982'},
+  {type:'spouse', a:'p1772402590144', b:'p1772402687715'},
+  {type:'spouse', a:'p1772402597236', b:'p1772402708370'},
+  {type:'parent', parent:'p1772402549669', child:'p1772402725744'},
+  {type:'parent', parent:'p1772402549669', child:'p1772402733848'},
+  {type:'parent', parent:'p1772402549669', child:'p1772402742396'},
+  {type:'parent', parent:'p1772402567498', child:'p1772402756466'},
+  {type:'parent', parent:'p1772402578190', child:'p1772402771072'},
+  {type:'parent', parent:'p1772402590144', child:'p1772402783698'},
+  {type:'parent', parent:'p1772402597236', child:'p1772402792490'},
+  {type:'spouse', a:'p1772401030091', b:'p1772402843530'},
+  {type:'spouse', a:'p1772400997391', b:'p1772402884830'},
+  {type:'spouse', a:'p1772401010934', b:'p1772402900032'},
+  {type:'spouse', a:'p1772401055282', b:'p1772402919999'},
+  {type:'spouse', a:'p1772401066040', b:'p1772402930209'},
+  {type:'spouse', a:'p1772401079980', b:'p1772402944266'},
+  {type:'spouse', a:'p1772401087775', b:'p1772402958758'},
+  {type:'spouse', a:'p1772401097535', b:'p1772402965650'},
+  {type:'spouse', a:'p1772401104795', b:'p1772402988034'},
+  {type:'spouse', a:'p1772401115105', b:'p1772403024384'},
+  {type:'spouse', a:'p1772401135815', b:'p1772403035488'},
+  {type:'spouse', a:'p1772401165660', b:'p1772403062540'},
+  {type:'spouse', a:'p1772401194614', b:'p1772403078640'},
+  {type:'spouse', a:'p1772401276106', b:'p1772403094990'},
+  {type:'spouse', a:'p1772401286008', b:'p1772403106096'},
+  {type:'spouse', a:'p1772401295281', b:'p1772403123862'},
+  {type:'spouse', a:'p1772401314225', b:'p1772403136674'},
+  {type:'spouse', a:'p1772401337499', b:'p1772403148126'},
+  {type:'spouse', a:'p1772401346401', b:'p1772403159128'},
+  {type:'spouse', a:'p1772401359026', b:'p1772403172054'},
+  {type:'parent', parent:'p1772401030091', child:'p1772403314036'},
+  {type:'spouse', a:'p1772403314036', b:'p1772403326477'},
+  {type:'spouse', a:'p1772403314036', b:'p1772403341698'},
+  {type:'parent', parent:'p1772403314036', child:'p1772428104255'},
+  {type:'parent', parent:'p1772403314036', child:'p1772428112988'},
+  {type:'parent', parent:'p1772403314036', child:'p1772428163069'},
+  {type:'spouse', a:'p1772428112988', b:'p1772428231686'},
+  {type:'parent', parent:'p1772428112988', child:'p1772428242988'},
+  {type:'parent', parent:'p1772428112988', child:'p1772428247998'},
+  {type:'parent', parent:'p1772401030091', child:'p1772428278308'},
+  {type:'parent', parent:'p1772401030091', child:'p1772428289224'},
+  {type:'parent', parent:'p1772401030091', child:'p1772428299930'},
+  {type:'parent', parent:'p1772401030091', child:'p1772428313142'},
+  {type:'parent', parent:'p1772428278308', child:'p1772428342792'},
+  {type:'parent', parent:'p1772428278308', child:'p1772428352132'},
+  {type:'spouse', a:'p1772428289224', b:'p1772428364876'},
+  {type:'parent', parent:'p1772428289224', child:'p1772428370706'},
+  {type:'parent', parent:'p1772428289224', child:'p1772428383584'},
+  {type:'parent', parent:'p1772401055282', child:'p1772428416680'},
+  {type:'parent', parent:'p1772401055282', child:'p1772428430936'},
+  {type:'parent', parent:'p1772401055282', child:'p1772428437402'},
+  {type:'parent', parent:'p1772401055282', child:'p1772428447097'},
+  {type:'parent', parent:'p1772401055282', child:'p1772428458532'},
+  {type:'parent', parent:'p1772401055282', child:'p1772428491738'},
+  {type:'parent', parent:'p1772401055282', child:'p1772428498336'},
+  {type:'parent', parent:'p1772401055282', child:'p1772428514364'},
+  {type:'parent', parent:'p1772401055282', child:'p1772428526842'},
+  {type:'parent', parent:'p1772401055282', child:'p1772428537748'},
+  {type:'spouse', a:'p1772428416680', b:'p1772428562782'},
+  {type:'spouse', a:'p1772428430936', b:'p1772428570468'},
+  {type:'spouse', a:'p1772428437402', b:'p1772428576908'},
+  {type:'spouse', a:'p1772428447097', b:'p1772428591027'},
+  {type:'spouse', a:'p1772428458532', b:'p1772428606266'},
+  {type:'spouse', a:'p1772428491738', b:'p1772428619660'},
+  {type:'spouse', a:'p1772428498336', b:'p1772428626242'},
+  {type:'spouse', a:'p1772428514364', b:'p1772428641044'},
+  {type:'parent', parent:'p1772428416680', child:'p1772428674955'},
+  {type:'spouse', a:'p1772428674955', b:'p1772428680694'},
+  {type:'parent', parent:'p1772428674955', child:'p1772428699882'},
+  {type:'parent', parent:'p1772428437402', child:'p1772428833780'},
+  {type:'spouse', a:'p1772428833780', b:'p1772428852428'},
+  {type:'parent', parent:'p1772428447097', child:'p1772428870451'},
+  {type:'spouse', a:'p1772428870451', b:'p1772428879791'},
+  {type:'parent', parent:'p1772428447097', child:'p1772428891584'},
+  {type:'spouse', a:'p1772428891584', b:'p1772428905333'},
+  {type:'parent', parent:'p1772428458532', child:'p1772428921713'},
+  {type:'parent', parent:'p1772428458532', child:'p1772428932756'},
+  {type:'parent', parent:'p1772428921713', child:'p1772428943256'},
+  {type:'parent', parent:'p1772428921713', child:'p1772428953696'},
+  {type:'parent', parent:'p1772428491738', child:'p1772428976456'},
+  {type:'parent', parent:'p1772428491738', child:'p1772428982645'},
+  {type:'parent', parent:'p1772428498336', child:'p1772428993166'},
+  {type:'parent', parent:'p1772401066040', child:'p1772429005924'},
+  {type:'parent', parent:'p1772401066040', child:'p1772429012286'},
+  {type:'spouse', a:'p1772429005924', b:'p1772429053650'},
+  {type:'spouse', a:'p1772429012286', b:'p1772429070500'},
+  {type:'parent', parent:'p1772429012286', child:'p1772429077220'},
+  {type:'parent', parent:'p1772429012286', child:'p1772429083641'},
+  {type:'parent', parent:'p1772429005924', child:'p1772429092239'},
+  {type:'parent', parent:'p1772429005924', child:'p1772429106741'},
+  {type:'spouse', a:'p1772429092239', b:'p1772429117884'},
+  {type:'parent', parent:'p1772429092239', child:'p1772429124913'},
+  {type:'spouse', a:'p1772429106741', b:'p1772429132404'},
+  {type:'parent', parent:'p1772429106741', child:'p1772429149711'},
+  {type:'parent', parent:'p1772429106741', child:'p1772429200040'},
+  {type:'spouse', a:'p1772429077220', b:'p1772429231327'},
+  {type:'parent', parent:'p1772429077220', child:'p1772429240739'},
+  {type:'parent', parent:'p1772429077220', child:'p1772429250135'},
+  {type:'parent', parent:'p1772401079980', child:'p1772429275299'},
+  {type:'parent', parent:'p1772401079980', child:'p1772429283705'},
+  {type:'parent', parent:'p1772401079980', child:'p1772429293060'},
+  {type:'parent', parent:'p1772401079980', child:'p1772429301237'},
+  {type:'parent', parent:'p1772401079980', child:'p1772429310940'},
+  {type:'spouse', a:'p1772429275299', b:'p1772429321298'},
+  {type:'spouse', a:'p1772429283705', b:'p1772429331526'},
+  {type:'spouse', a:'p1772429293060', b:'p1772429342188'},
+  {type:'spouse', a:'p1772429301237', b:'p1772429362704'},
+  {type:'spouse', a:'p1772429310940', b:'p1772429374685'},
+  {type:'parent', parent:'p1772429275299', child:'p1772429402841'},
+  {type:'parent', parent:'p1772429275299', child:'p1772429417385'},
+  {type:'parent', parent:'p1772429275299', child:'p1772429424969'},
+  {type:'spouse', a:'p1772429402841', b:'p1772429441150'},
+  {type:'spouse', a:'p1772429417385', b:'p1772429457827'},
+  {type:'spouse', a:'p1772429424969', b:'p1772429466326'},
+  {type:'parent', parent:'p1772429402841', child:'p1772429480727'},
+  {type:'parent', parent:'p1772429402841', child:'p1772429491689'},
+  {type:'spouse', a:'p1772429480727', b:'p1772429520623'},
+  {type:'spouse', a:'p1772429491689', b:'p1772429533569'},
+  {type:'parent', parent:'p1772429417385', child:'p1772429569327'},
+  {type:'parent', parent:'p1772429417385', child:'p1772429577305'},
+  {type:'parent', parent:'p1772429424969', child:'p1772429591187'},
+  {type:'parent', parent:'p1772429424969', child:'p1772429609333'},
+  {type:'parent', parent:'p1772429283705', child:'p1772429628141'},
+  {type:'parent', parent:'p1772429283705', child:'p1772429637826'},
+  {type:'parent', parent:'p1772429283705', child:'p1772429647539'},
+  {type:'parent', parent:'p1772429283705', child:'p1772429657267'},
+  {type:'parent', parent:'p1772429283705', child:'p1772429666108'},
+  {type:'parent', parent:'p1772429283705', child:'p1772429678867'},
+  {type:'spouse', a:'p1772429628141', b:'p1772429689933'},
+  {type:'spouse', a:'p1772429637826', b:'p1772429698959'},
+  {type:'spouse', a:'p1772429647539', b:'p1772429710349'},
+  {type:'spouse', a:'p1772429657267', b:'p1772429730523'},
+  {type:'spouse', a:'p1772429666108', b:'p1772429741539'},
+  {type:'parent', parent:'p1772429628141', child:'p1772429842347'},
+  {type:'parent', parent:'p1772429637826', child:'p1772429847505'},
+  {type:'parent', parent:'p1772429647539', child:'p1772429857223'},
+  {type:'parent', parent:'p1772429647539', child:'p1772429861503'},
+  {type:'parent', parent:'p1772429657267', child:'p1772429872949'},
+  {type:'parent', parent:'p1772429666108', child:'p1772429885719'},
+  {type:'parent', parent:'p1772429293060', child:'p1772429900409'},
+  {type:'parent', parent:'p1772429293060', child:'p1772429905581'},
+  {type:'parent', parent:'p1772429900409', child:'p1772429923189'},
+  {type:'spouse', a:'p1772429900409', b:'p1772429932131'},
+  {type:'spouse', a:'p1772429905581', b:'p1772429952155'},
+  {type:'parent', parent:'p1772429905581', child:'p1772429967605'},
+  {type:'parent', parent:'p1772429301237', child:'p1772430010999'},
+  {type:'parent', parent:'p1772429301237', child:'p1772430017853'},
+  {type:'spouse', a:'p1772430010999', b:'p1772430039191'},
+  {type:'spouse', a:'p1772430017853', b:'p1772430051387'},
+  {type:'parent', parent:'p1772430010999', child:'p1772430065031'},
+  {type:'parent', parent:'p1772430017853', child:'p1772430082099'},
+  {type:'parent', parent:'p1772430017853', child:'p1772430087667'},
+  {type:'parent', parent:'p1772429310940', child:'p1772430103043'},
+  {type:'parent', parent:'p1772429310940', child:'p1772430116701'},
+  {type:'spouse', a:'p1772430103043', b:'p1772430126133'},
+  {type:'parent', parent:'p1772430103043', child:'p1772430147897'},
+  {type:'parent', parent:'p1772401087775', child:'p1772430165945'},
+  {type:'parent', parent:'p1772401087775', child:'p1772430172403'},
+  {type:'parent', parent:'p1772401087775', child:'p1772430187031'},
+  {type:'parent', parent:'p1772401087775', child:'p1772430199474'},
+  {type:'spouse', a:'p1772430165945', b:'p1772430216413'},
+  {type:'spouse', a:'p1772430172403', b:'p1772430230743'},
+  {type:'spouse', a:'p1772430187031', b:'p1772430240825'},
+  {type:'spouse', a:'p1772430199474', b:'p1772430254001'},
+  {type:'parent', parent:'p1772430165945', child:'p1772430271709'},
+  {type:'parent', parent:'p1772430165945', child:'p1772430281209'},
+  {type:'parent', parent:'p1772430172403', child:'p1772433243124'},
+  {type:'parent', parent:'p1772430172403', child:'p1772433260082'},
+  {type:'parent', parent:'p1772430187031', child:'p1772433277194'},
+  {type:'parent', parent:'p1772430187031', child:'p1772433294952'},
+  {type:'parent', parent:'p1772430199474', child:'p1772433303438'},
+  {type:'parent', parent:'p1772430199474', child:'p1772433310052'},
+  {type:'spouse', a:'p1772430271709', b:'p1772433321802'},
+  {type:'spouse', a:'p1772430281209', b:'p1772433327986'},
+  {type:'spouse', a:'p1772433243124', b:'p1772433340030'},
+  {type:'spouse', a:'p1772433260082', b:'p1772433354938'},
+  {type:'spouse', a:'p1772433294952', b:'p1772433372495'},
+  {type:'spouse', a:'p1772433303438', b:'p1772433387608'},
+  {type:'spouse', a:'p1772433310052', b:'p1772433398316'},
+  {type:'parent', parent:'p1772430271709', child:'p1772433413666'},
+  {type:'parent', parent:'p1772430281209', child:'p1772433421772'},
+  {type:'parent', parent:'p1772433260082', child:'p1772433432066'},
+  {type:'parent', parent:'p1772433260082', child:'p1772433439894'},
+  {type:'parent', parent:'p1772433294952', child:'p1772433450223'},
+  {type:'parent', parent:'p1772433310052', child:'p1772433469475'},
+  {type:'parent', parent:'p1772401097535', child:'p1772433484060'},
+  {type:'parent', parent:'p1772401097535', child:'p1772433491660'},
+  {type:'spouse', a:'p1772433484060', b:'p1772433500618'},
+  {type:'parent', parent:'p1772433484060', child:'p1772433511984'},
+  {type:'parent', parent:'p1772433484060', child:'p1772433523478'},
+  {type:'parent', parent:'p1772401115105', child:'p1772433539020'},
+  {type:'parent', parent:'p1772401115105', child:'p1772433550993'},
+  {type:'spouse', a:'p1772433539020', b:'p1772433563764'},
+  {type:'spouse', a:'p1772433550993', b:'p1772433573318'},
+  {type:'parent', parent:'p1772433539020', child:'p1772433584208'},
+  {type:'parent', parent:'p1772433539020', child:'p1772433596630'},
+  {type:'spouse', a:'p1772433596630', b:'p1772433602074'},
+  {type:'parent', parent:'p1772433550993', child:'p1772433615385'},
+  {type:'parent', parent:'p1772433550993', child:'p1772433624032'},
+  {type:'parent', parent:'p1772401135815', child:'p1772433765746'},
+  {type:'spouse', a:'p1772433765746', b:'p1772434000505'},
+  {type:'parent', parent:'p1772433765746', child:'p1772434025700'},
+  {type:'spouse', a:'p1772434025700', b:'p1772434038195'},
+  {type:'parent', parent:'p1772434025700', child:'p1772434053700'},
+  {type:'parent', parent:'p1772401135815', child:'p1772434098419'},
+  {type:'parent', parent:'p1772401135815', child:'p1772434108903'},
+  {type:'spouse', a:'p1772434098419', b:'p1772434171319'},
+  {type:'spouse', a:'p1772434108903', b:'p1772434179804'},
+  {type:'parent', parent:'p1772434098419', child:'p1772434402763'},
+  {type:'spouse', a:'p1772434402763', b:'p1772434409273'},
+  {type:'parent', parent:'p1772434402763', child:'p1772434423916'},
+  {type:'parent', parent:'p1772434108903', child:'p1772434436913'},
+  {type:'spouse', a:'p1772434436913', b:'p1772434446988'},
+  {type:'parent', parent:'p1772434436913', child:'p1772434465579'},
+  {type:'parent', parent:'p1772401165660', child:'p1772434794903'},
+  {type:'parent', parent:'p1772401165660', child:'p1772434806541'},
+  {type:'parent', parent:'p1772401194614', child:'p1772434816317'},
+  {type:'parent', parent:'p1772401194614', child:'p1772434830987'},
+  {type:'spouse', a:'p1772434794903', b:'p1772434844096'},
+  {type:'spouse', a:'p1772434806541', b:'p1772434852563'},
+  {type:'spouse', a:'p1772434816317', b:'p1772434865037'},
+  {type:'parent', parent:'p1772434794903', child:'p1772434885851'},
+  {type:'spouse', a:'p1772434885851', b:'p1772434897161'},
+  {type:'parent', parent:'p1772434885851', child:'p1772434911609'},
+  {type:'parent', parent:'p1772434806541', child:'p1772434930989'},
+  {type:'spouse', a:'p1772434930989', b:'p1772434940065'},
+  {type:'parent', parent:'p1772434930989', child:'p1772434946623'}
+,
+  {type:'parent',parent:'p1772401055282',child:'p1772449755254'},
+  {type:'parent',parent:'p1772401104795',child:'p1772449913896'},
+  {type:'parent',parent:'p1772401104795',child:'p1772449928397'},
+  {type:'spouse',a:'p1772449928397',b:'p1772449982175'},
+  {type:'parent',parent:'p1772449928397',child:'p1772450001463'},
+  {type:'spouse',a:'p1772450001463',b:'p1772450024836'},
+  {type:'parent',parent:'p1772450001463',child:'p1772450047278'},
+  {type:'parent',parent:'p1772450001463',child:'p1772450064986'},
+  {type:'parent',parent:'p1772449928397',child:'p1772450128378'},
+  {type:'spouse',a:'p1772401104795',b:'p1772450143800'},
+  {type:'parent',parent:'p1772450143800',child:'p1772450158029'},
+  {type:'parent',parent:'p1772450143800',child:'p1772450173910'},
+  {type:'parent',parent:'p1772450143800',child:'p1772450207037'},
+  {type:'parent',parent:'p1772401286008',child:'p1772450236669'},
+  {type:'parent',parent:'p1772401286008',child:'p1772450251596'},
+  {type:'parent',parent:'p1772401286008',child:'p1772450266834'},
+  {type:'spouse',a:'p1772450266834',b:'p1772450282346'},
+  {type:'parent',parent:'p1772450266834',child:'p1772450312106'},
+  {type:'parent',parent:'p1772450266834',child:'p1772450330636'},
+  {type:'parent',parent:'p1772450266834',child:'p1772450359615'}
+];  // END RELATIONS
+
+
+
+const $=s=>document.getElementById(s);
+const byId=id=>people.find(p=>p.id===id);
+const esc=s=>{const d=document.createElement('div');d.textContent=s;return d.innerHTML};
+const gCh=id=>{const s=new Set();relations.filter(r=>r.type==='parent'&&r.parent===id).forEach(r=>s.add(r.child));return[...s]};
+const gPa=id=>relations.filter(r=>r.type==='parent'&&r.child===id).map(r=>r.parent);
+const gSp=id=>{const s=new Set();relations.filter(r=>r.type==='spouse'&&(r.a===id||r.b===id)).forEach(r=>s.add(r.a===id?r.b:r.a));return[...s]};
+function famCh(id){const k=new Set();gCh(id).forEach(c=>k.add(c));gSp(id).forEach(s=>gCh(s).forEach(c=>k.add(c)));return[...k]}
+function chGrouped(id){const sp=gSp(id),ak=gCh(id);if(sp.length<=1)return[{spouse:sp[0]||null,kids:ak}];
+  const g=[],cl=new Set();sp.forEach(s=>{const v=relations.filter(r=>r.type==='parent'&&r.parent===id&&r.spouse===s).map(r=>r.child);
+    if(v.length){g.push({spouse:s,kids:v});v.forEach(k=>cl.add(k))}});
+  const uc=ak.filter(k=>!cl.has(k));if(uc.length)g.push({spouse:null,kids:uc});if(!g.length)g.push({spouse:null,kids:ak});return g}
+const GN=['Gen 0','Gen I','Gen II','Gen III','Gen IV','Gen V','Gen VI','Gen VII','Gen VIII','Gen IX','Gen X','Gen XI'];
+let openN=new Set(),sq='',genFilter=null;
+
+function oNav(){$('nav').classList.add('on');$('shade').classList.add('on');buildGenChips()}
+function cNav(){$('nav').classList.remove('on');$('shade').classList.remove('on')}
+
+function buildGenChips(){
+  const gs=new Set(people.map(p=>p.generation||0));
+  const sorted=[...gs].sort((a,b)=>a-b);
+  let h='';sorted.forEach(g=>{h+='<div class="gc'+(genFilter===g?' on':'')+'" onclick="toggleGen('+g+')">'+(GN[g]||'Gen '+g)+'</div>'});
+  if(genFilter!==null)h+='<div class="gc" onclick="toggleGen(null)" style="color:#b44">Clear</div>';
+  $('gchips').innerHTML=h}
+
+function toggleGen(g){genFilter=g===genFilter?null:g;buildGenChips();cNav();rTree()}
+
+// ═══ TREE ═══
+function getRoots(){const hp=new Set();relations.filter(r=>r.type==='parent').forEach(r=>hp.add(r.child));
+  const cv=new Set(hp);relations.filter(r=>r.type==='spouse').forEach(r=>{if(hp.has(r.a))cv.add(r.b);if(hp.has(r.b))cv.add(r.a)});
+  return people.filter(p=>!cv.has(p.id))}
+function mS(id,q){if(!q)return true;const p=byId(id);if(!p)return false;
+  if(p.name.toLowerCase().includes(q))return true;
+  const sp=gSp(id);for(let i=0;i<sp.length;i++){const s=byId(sp[i]);if(s&&s.name.toLowerCase().includes(q))return true}
+  return famCh(id).some(c=>mS(c,q))}
+function nM(id,q){if(!q)return false;const p=byId(id);if(!p)return false;
+  if(p.name.toLowerCase().includes(q))return true;
+  const sp=gSp(id);for(let i=0;i<sp.length;i++){const s=byId(sp[i]);if(s&&s.name.toLowerCase().includes(q))return true}
+  return false}
+function gF(id){if(genFilter===null)return true;const p=byId(id);return p&&p.generation===genFilter}
+function rTree(){
+  const q=sq.toLowerCase().trim();
+  if(q){openN.clear();people.forEach(p=>{if(famCh(p.id).length&&mS(p.id,q))openN.add(p.id)})}
+  const roots=getRoots(),main=roots.filter(p=>famCh(p.id).length>0||gSp(p.id).length>0);
+  const lone=roots.filter(p=>famCh(p.id).length===0&&gSp(p.id).length===0);
+  let h='',shown=0;
+  main.forEach(p=>{if((!q||mS(p.id,q))&&(genFilter===null||mS(p.id,''))){h+=rN(p.id,q,true);shown++}});
+  if(!q&&genFilter===null&&lone.length){h+='<div class="uc-label">Unconnected \u00b7 '+lone.length+'</div>';
+    lone.forEach(p=>{h+=rN(p.id,q,true);shown++})}
+  if(q)lone.forEach(p=>{if(mS(p.id,q)){h+=rN(p.id,q,true);shown++}});
+  $('tree').innerHTML=h||'<div style="text-align:center;padding:60px 12px;color:var(--ink3);font-size:.8rem">No results</div>';
+  const gc=new Set(people.map(p=>p.generation||0)).size;
+  $('cnt').textContent=(q?shown+' found':people.length)+' people';
+  $('nc').textContent=people.length;$('ng').textContent=gc}
+function rN(id,q,isR){
+  const p=byId(id);if(!p)return'';
+  if(genFilter!==null&&!mS(id,''))return'';
+  const kids=famCh(id),sp=gSp(id).map(s=>byId(s)).filter(Boolean),hk=kids.length>0;
+  const isO=openN.has(id);const hl=q&&nM(id,q);const gc=p.gender==='m'?'m':'f';
+  let h='<div class="pc'+(isR?' rt':'')+'"><div class="pcard'+(hl?' hl':'')+'" data-id="'+id+'" onclick="openFV(\''+id+'\')">';
+  if(hk)h+='<div class="pchev'+(isO?' o':'')+'" onclick="event.stopPropagation();tog(\''+id+'\')">\u25b6</div>';
+  else h+='<div class="pchev h">\u25b6</div>';
+  h+='<div class="pdot '+gc+'"></div><span class="pnm">'+esc(p.name)+'</span>';
+  if(sp.length)h+='<span class="psp">'+esc(sp.map(s=>s.name).join(', '))+'</span>';
+  if(hk)h+='<span class="pbadge">'+kids.length+'</span>';
+  h+='</div>';
+  if(hk){h+='<div class="kids'+(isO?'':' shut')+'" id="k-'+id+'">';
+    kids.forEach(c=>{if(!q||mS(c,q))h+=rN(c,q,false)});h+='</div>'}
+  return h+'</div>'}
+function tog(id){if(openN.has(id))openN.delete(id);else openN.add(id);rTree()}
+function expAll(){people.forEach(p=>{if(famCh(p.id).length)openN.add(p.id)});rTree()}
+function colAll(){openN.clear();rTree()}
+let _t;$('si').addEventListener('input',e=>{clearTimeout(_t);_t=setTimeout(()=>{sq=e.target.value;rTree()},100)});
+
+// ═══ FOCUS VIEW ═══
+let fH=[];
+function openFV(id){fH=[id];$('fv').classList.add('open');history.pushState({f:1},'','');rFV(id)}
+function closeFV(){$('fv').classList.remove('open');fH=[]}
+function goTo(id){fH.push(id);history.pushState({f:1},'','');rFV(id)}
+function goBack(){if(fH.length>1){fH.pop();rFV(fH[fH.length-1])}else closeFV()}
+window.addEventListener('popstate',()=>{if($('fv').classList.contains('open')){if(fH.length>1){fH.pop();rFV(fH[fH.length-1])}else closeFV()}});
+function getChain(id){const ch=[];let c=id;const v=new Set();
+  while(c&&!v.has(c)){v.add(c);ch.unshift(c);const pa=gPa(c);if(!pa.length)break;const lp=pa.find(pid=>gPa(pid).length>0);c=lp||pa[0]}return ch}
+function rFV(id){
+  const p=byId(id);if(!p)return;
+  $('fvn').textContent=p.name;
+  const parents=gPa(id).map(x=>byId(x)).filter(Boolean),spouses=gSp(id).map(x=>byId(x)).filter(Boolean);
+  const kg=chGrouped(id),ak=famCh(id);let h='';
+  const ch=getChain(id);
+  if(ch.length>1){h+='<div class="anc"><div class="anc-l">Lineage</div><div class="anc-ch">';
+    ch.forEach((a,i)=>{const ap=byId(a);if(!ap)return;const cur=a===id;
+      h+='<div class="anc-n'+(cur?' cur':'')+'" onclick="'+(cur?'':'goTo(\''+a+'\')')+'"><div class="pdot '+(ap.gender==='m'?'m':'f')+'"></div><span class="pnm">'+esc(ap.name)+'</span><span class="fg">'+(GN[ap.generation]||'')+'</span></div>';
+      if(i<ch.length-1)h+='<div class="anc-ar">\u25bc</div>'});h+='</div></div>'}
+  if(parents.length){h+='<div class="fs">Parents</div>';parents.forEach(pa=>{h+=fc(pa,'Parent')})}
+  h+='<div class="fhero"><span class="pnm">'+esc(p.name)+'</span><div class="sub"><div class="pdot '+(p.gender==='m'?'m':'f')+'"></div>'+(p.occ||'')+(p.place?' \u00b7 '+esc(p.place):'')+'</div></div>';
+  if(spouses.length){h+='<div class="fs">Spouse'+(spouses.length>1?'s':'')+'</div>';spouses.forEach((s,i)=>h+=fc(s,spouses.length>1?'Spouse '+(i+1):'Spouse'))}
+  if(ak.length){h+='<div class="fs">Children \u00b7 '+ak.length+'</div>';
+    if(spouses.length>1){kg.forEach(g=>{const s=g.spouse?byId(g.spouse):null;h+='<div class="fsg">';
+      if(s)h+='<div class="fsg-h"><div class="pdot '+(s.gender==='m'?'m':'f')+'"></div><span class="pnm" style="font-size:.72rem">'+esc(s.name)+'</span></div>';
+      g.kids.forEach(k=>{const kp=byId(k);if(kp)h+=fc(kp,'Child')});h+='</div>'})}
+    else ak.forEach(k=>{const kp=byId(k);if(kp)h+=fc(kp,'Child')})}
+  h+='<div class="fbtns"><button class="fbtn" onclick="closeFV();openEdit(\''+id+'\')">Edit</button>';
+  h+='<button class="fbtn ac" onclick="closeFV();openWiz(\''+id+'\')">+ Family</button>';
+  h+='<button class="fbtn" style="color:#b44" onclick="delP(\''+id+'\')">Remove</button></div>';
+  $('fvc').innerHTML=h}
+function fc(p,rel){return'<div class="fcard '+(p.gender==='m'?'gm':'gf')+'" onclick="goTo(\''+p.id+'\')"><div style="flex:1"><div class="rl">'+rel+'</div><span class="pnm">'+esc(p.name)+'</span></div><span style="color:var(--ink4)">\u203a</span></div>'}
+
+// ═══ WIZARD — MULTIPLE SIBLINGS + PARENT SPOUSES ═══
+let W={},WI=1,WR=[],WP=null,WN='',WPS=[];
+// WPS = array of node IDs for new spouses of the EXISTING parent (WP)
+
+function wMk(g){const id=WI++,sg=g==='f'?'m':'f',si=WI++;
+  W[id]={id,name:'',gender:g,spouses:[si],children:[]};
+  W[si]={id:si,name:'',gender:sg,isSp:true};return id}
+
+function wMkSimple(g){
+  // Simple node — just a person, no auto-spouse (used for parent spouses)
+  const id=WI++;
+  W[id]={id,name:'',gender:g,isSp:true};return id}
+
+function openWiz(pid){W={};WI=1;WR=[];WPS=[];WP=pid;WN=pid?byId(pid).name:'';
+  WR.push(wMk('m'));
+  // If opening for existing person, detect their gender for spouse auto-gender
+  $('wiz').classList.add('on');
+  $('wiztitle').textContent=pid?'Adding under '+WN:'Add Family';wR()}
+
+function closeWiz(){$('wiz').classList.remove('on')}
+function wCnt(){let c=0;for(let k in W)if(W[k].name&&W[k].name.trim())c++;return c}
+
+function wR(){
+  const sy=$('wizb').scrollTop;let h='';
+
+  // === SECTION 1: New spouses of parent ===
+  if(WP){
+    var pp=byId(WP);
+    var spG=pp&&pp.gender==='f'?'m':'f';
+
+    WPS.forEach(function(sid,i){
+      var sp=W[sid];if(!sp)return;
+      var label=spG==='f'?'Wife':'Husband';
+      if(WPS.length>1){var o=['1st','2nd','3rd','4th','5th'][i]||((i+1)+'th');label=o+' '+label.toLowerCase()}
+      h+='<div class="wctx">'+label+' of <b>'+esc(WN)+'</b></div>';
+      h+='<div class="wp wsp"><span style="color:var(--pink);font-size:.65rem">\u2665</span>';
+      h+='<input value="'+esc(sp.name)+'" placeholder="Spouse name\u2026" data-n="'+sid+'" oninput="wU(this)">';
+      h+='<button class="wx" onclick="wDPS('+i+')">\u00d7</button></div>';
+    });
+
+    h+='<div class="wadd" style="margin-left:0" onclick="wAddPS()">+ add spouse to '+esc(WN)+'</div>';
+  }
+
+  // === SECTION 2: Children (existing behavior) ===
+  WR.forEach(function(rid,i){h+=wRP(rid,0,i,WR.length)});
+  if(WP)h+='<div class="wadd-sib" onclick="wAS()">+ add another child of '+esc(WN)+'</div>';
+  else h+='<div class="wadd-sib" onclick="wAS()">+ add another person</div>';
+  $('wizb').innerHTML=h;$('wizb').scrollTop=sy;
+  var c=wCnt();$('wsave').textContent=c?'Save · '+c:'Save'}
+
+function wRL(d,g,t,pn,i,n){
+  var root=WN||'…';
+  if(d===0&&t==='p'){if(!WP)return'';
+    if(n>1){var o=['1st','2nd','3rd','4th','5th','6th','7th','8th'][i]||((i+1)+'th');return o+' child of <b>'+esc(root)+'</b>'}
+    return'Child of <b>'+esc(root)+'</b>'}
+  if(t==='s'){var r=g==='f'?'Wife':'Husband';
+    if(n>1){var o2=['1st','2nd','3rd'][i]||((i+1)+'th');r=o2+' '+r.toLowerCase()}
+    return r+' of <b>'+esc(pn||'…')+'</b>'}
+  if(t==='c'){var p='';
+    if(d===1)p='Grandchild';else if(d===2)p='Great-grandchild';
+    else if(d>2){var x='';for(var j=0;j<d-1;j++)x+='great-';p=x+'grandchild'}else p='Child';
+    if(n>1){var o3=['1st','2nd','3rd','4th','5th','6th','7th','8th'][i]||((i+1)+'th');p=o3+' '+p.charAt(0).toLowerCase()+p.slice(1)}
+    return p+' of <b>'+esc(root)+'</b>'}return''}
+
+function wRP(nid,d,idx,tot){
+  var n=W[nid];if(!n)return'';var pn=n.name.trim()||'…';var sg=n.gender==='m'?'f':'m';
+  var h='<div class="wn'+(d===0?' wr':'')+'">';
+  var ctx=d===0?wRL(0,n.gender,'p',null,idx,tot):wRL(d,n.gender,'c',null,idx,tot);
+  if(ctx)h+='<div class="wctx">'+ctx+'</div>';
+  h+='<div class="wp wmain"><input class="wnm" value="'+esc(n.name)+'" placeholder="Name…" data-n="'+nid+'" oninput="wU(this)">';
+  h+='<select data-n="'+nid+'" onchange="wG(this)"><option value="m"'+(n.gender==='m'?' selected':'')+'>M</option><option value="f"'+(n.gender==='f'?' selected':'')+'>F</option></select>';
+  if(d>0)h+='<button class="wx" onclick="wDC('+nid+')">×</button>';
+  else if(WR.length>1)h+='<button class="wx" onclick="wDR('+nid+')">×</button>';
+  h+='</div>';
+  n.spouses.forEach(function(sid,i){var sp=W[sid];if(!sp)return;sp.gender=sg;
+    var sc=wRL(d,sg,'s',pn,i,n.spouses.length);
+    h+='<div class="wn">';if(sc)h+='<div class="wctx">'+sc+'</div>';
+    h+='<div class="wp wsp"><span style="color:var(--pink);font-size:.65rem">♥</span>';
+    h+='<input value="'+esc(sp.name)+'" placeholder="Spouse…" data-n="'+sid+'" oninput="wU(this)">';
+    h+='<button class="wx" onclick="wDS('+nid+','+i+')">×</button></div></div>'});
+  h+='<div class="wadd" onclick="wAddSp('+nid+')">+ spouse</div>';
+  n.children.forEach(function(cid,i){h+=wRP(cid,d+1,i,n.children.length)});
+  h+='<div class="wadd" onclick="wAddCh('+nid+')">+ child of '+esc(pn)+'</div>';
+  return h+'</div>'}
+
+// ═══ WIZARD ACTIONS ═══
+function wU(el){var id=+el.dataset.n;W[id].name=el.value;var c=wCnt();$('wsave').textContent=c?'Save · '+c:'Save'}
+function wG(el){var id=+el.dataset.n;W[id].gender=el.value;var sg=W[id].gender==='m'?'f':'m';
+  if(W[id].spouses)W[id].spouses.forEach(function(sid){if(W[sid])W[sid].gender=sg});wR()}
+function wAddSp(nid){var sg=W[nid].gender==='m'?'f':'m';var si=WI++;
+  W[si]={id:si,name:'',gender:sg,isSp:true};W[nid].spouses.push(si);wR()}
+function wAddCh(nid){W[nid].children.push(wMk('m'));wR()}
+function wAS(){WR.push(wMk('m'));wR();setTimeout(function(){$('wizb').scrollTop=$('wizb').scrollHeight},30)}
+function wDS(nid,i){delete W[W[nid].spouses[i]];W[nid].spouses.splice(i,1);wR()}
+function wDR(nid){var i=WR.indexOf(nid);if(i>=0)WR.splice(i,1);dT(nid);wR()}
+function wDC(nid){for(var k in W){if(W[k].children){var i=W[k].children.indexOf(nid);if(i>=0){W[k].children.splice(i,1);break}}}dT(nid);wR()}
+function dT(id){var n=W[id];if(!n)return;if(n.spouses)n.spouses.forEach(function(s){delete W[s]});if(n.children)n.children.forEach(function(c){dT(c)});delete W[id]}
+
+// Parent spouse actions
+function wAddPS(){
+  var pp=byId(WP);var spG=pp&&pp.gender==='f'?'m':'f';
+  var sid=wMkSimple(spG);WPS.push(sid);wR()}
+function wDPS(i){var sid=WPS[i];delete W[sid];WPS.splice(i,1);wR()}
+
+function wizSave(){
+  // Check: need at least one name in children OR parent spouses
+  var any=false;
+  WR.forEach(function(r){if(W[r]&&W[r].name.trim())any=true});
+  WPS.forEach(function(sid){if(W[sid]&&W[sid].name.trim())any=true});
+  if(!any){toast('Enter a name','w');return}
+  var cr=[];
+
+  // 1. Save parent spouses first
+  WPS.forEach(function(sid){
+    var sp=W[sid];if(!sp||!sp.name.trim())return;
+    var spid='p'+Date.now()+(Math.random()*1e4|0);
+    var gen=WP?(byId(WP).generation||0):0;
+    people.push({id:spid,name:sp.name.trim(),gender:sp.gender,birth:null,death:null,occ:'',place:'',notes:'',generation:gen});
+    relations.push({type:'spouse',a:WP,b:spid});
+    cr.push(spid)});
+
+  // 2. Save children tree
+  function sv(nid,par,gen){var n=W[nid];if(!n||!n.name.trim())return;
+    var pid='p'+Date.now()+(Math.random()*1e4|0);
+    people.push({id:pid,name:n.name.trim(),gender:n.gender,birth:null,death:null,occ:'',place:'',notes:'',generation:gen});
+    cr.push(pid);if(par)relations.push({type:'parent',parent:par,child:pid});
+    n.spouses.forEach(function(sid){var sp=W[sid];if(!sp||!sp.name.trim())return;
+      var si='p'+Date.now()+(Math.random()*1e4|0);
+      people.push({id:si,name:sp.name.trim(),gender:sp.gender,birth:null,death:null,occ:'',place:'',notes:'',generation:gen});
+      relations.push({type:'spouse',a:pid,b:si});cr.push(si)});
+    n.children.forEach(function(c){sv(c,pid,gen+1)});openN.add(pid)}
+  var gen=WP?(byId(WP).generation||0)+1:0;
+  WR.forEach(function(r){sv(r,WP,gen)});
+  closeWiz();rTree();saveD();toast('Added '+cr.length+' people','ok')}
+
+// ═══ EDIT ═══
+function openEdit(id){const p=byId(id);if(!p)return;
+  $('editI').innerHTML='<h2>Edit</h2><div class="rw f"><div class="fl"><label>Name</label><input id="en" value="'+esc(p.name)+'"></div></div><div class="rw"><div class="fl"><label>Gender</label><select id="eg"><option value="m"'+(p.gender==='m'?' selected':'')+'>Male</option><option value="f"'+(p.gender==='f'?' selected':'')+'>Female</option></select></div><div class="fl"><label>Gen</label><input id="ege" type="number" value="'+(p.generation||0)+'"></div></div><div class="rw"><div class="fl"><label>Birth</label><input id="ebi" type="number" value="'+(p.birth||'')+'"></div><div class="fl"><label>Death</label><input id="ede" type="number" value="'+(p.death||'')+'"></div></div><div class="rw f"><div class="fl"><label>Place</label><input id="epl" value="'+esc(p.place||'')+'"></div></div><div class="rw f"><div class="fl"><label>Notes</label><textarea id="eno">'+esc(p.notes||'')+'</textarea></div></div><div class="ma"><button class="bca" onclick="$(\'editOv\').classList.remove(\'on\')">Cancel</button><button class="bok" onclick="saveEd(\''+id+'\')">Save</button></div>';
+  $('editOv').classList.add('on')}
+function saveEd(id){const p=byId(id);if(!p)return;Object.assign(p,{name:$('en').value.trim(),gender:$('eg').value,generation:+$('ege').value||0,birth:+$('ebi').value||null,death:+$('ede').value||null,place:$('epl').value.trim(),notes:$('eno').value.trim()});
+  $('editOv').classList.remove('on');rTree();saveD();toast(p.name+' updated','ok')}
+function delP(id){const p=byId(id);if(!confirm('Remove "'+p.name+'"?'))return;closeFV();
+  const i=people.findIndex(x=>x.id===id);if(i>=0)people.splice(i,1);
+  for(let j=relations.length-1;j>=0;j--){const r=relations[j];if(r.parent===id||r.child===id||r.a===id||r.b===id)relations.splice(j,1)}
+  rTree();saveD();toast(p.name+' removed','ok')}
+
+function openExp(){let c='let people=[\n';people.forEach((p,i)=>{c+="  {id:'"+p.id+"',name:'"+p.name.replace(/'/g,"\\'")+"',gender:'"+p.gender+"',birth:"+(p.birth||'null')+",death:"+(p.death||'null')+",occ:'"+(p.occ||'').replace(/'/g,"\\'")+"',place:'"+(p.place||'').replace(/'/g,"\\'")+"',notes:'"+(p.notes||'').replace(/'/g,"\\'")+"',generation:"+(p.generation||0)+"}"+(i<people.length-1?',':'')+"\n"});
+  c+='];  // END PEOPLE\n\nlet relations=[\n';relations.forEach((r,i)=>{if(r.type==='spouse')c+="  {type:'spouse',a:'"+r.a+"',b:'"+r.b+"'}";else{c+="  {type:'parent',parent:'"+r.parent+"',child:'"+r.child+"'";if(r.spouse)c+=",spouse:'"+r.spouse+"'";c+="}"}c+=(i<relations.length-1?',':'')+"\n"});
+  c+='];  // END RELATIONS';$('etxt').value=c;$('expo').classList.add('on')}
+function cpExp(){$('etxt').select();navigator.clipboard.writeText($('etxt').value).then(()=>toast('Copied','ok'))}
+
+const SK='talagunda_v11';
+function saveD(){try{localStorage.setItem(SK,JSON.stringify({people,relations}));toast('Saved','ok')}catch(e){toast('Save failed','w')}}
+function loadD(){try{const r=localStorage.getItem(SK);if(!r)return false;const d=JSON.parse(r);if(d.people&&d.relations){people=d.people;relations=d.relations;return true}}catch(e){}return false}
+function toast(m,t){document.querySelectorAll('.tst').forEach(x=>x.remove());const d=document.createElement('div');d.className='tst'+(t?' '+t:'');d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2e3)}
+
+const had=loadD();
+people.forEach(p=>{if((p.generation||0)<3&&famCh(p.id).length)openN.add(p.id)});
+rTree();if(had)setTimeout(()=>toast('Loaded \u00b7 '+people.length+' people','ok'),200);
+</script>
+</body>
+</html>
